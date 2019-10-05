@@ -33,7 +33,7 @@ static int dropRoot(void) {
 	return 0;
 }
 
-void setResponse(char * const response, const char * const domain) {
+static void setResponse(char * const response, const char * const domain) {
 	memcpy(response,
 		"HTTP/1.1 301 r\r\n"
 		"Tk: N\r\n"
