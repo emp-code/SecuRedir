@@ -43,7 +43,7 @@ void setResponse(char * const response, const char * const domain) {
 		"Location: https://"
 	, 109);
 
-	memcpy(response + 109, domain, lenDomain);
+	memcpy(response + 109, domain, strlen(domain));
 	memcpy(response + 109 + strlen(domain), "\r\n\r\n", 4);
 }
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
 	if (dropRoot() != 0) return 4;
 
-	const size_t lenRespones = 113 + strlen(argv[1]);
+	const size_t lenResponse = 113 + strlen(argv[1]);
 	char response[lenResponse];
 	setResponse(response, argv[1]);
 
