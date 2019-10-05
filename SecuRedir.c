@@ -33,7 +33,7 @@ static int dropRoot(void) {
 	return 0;
 }
 
-static void setResponse(char * const response, const char * const domain) {
+static void setResponse(char * const response, const char * const url) {
 	memcpy(response,
 		"HTTP/1.1 301 r\r\n"
 		"Tk: N\r\n"
@@ -43,8 +43,8 @@ static void setResponse(char * const response, const char * const domain) {
 		"Location: https://"
 	, 109);
 
-	memcpy(response + 109, domain, strlen(domain));
-	memcpy(response + 109 + strlen(domain), "\r\n\r\n", 4);
+	memcpy(response + 109, url, strlen(url));
+	memcpy(response + 109 + strlen(url), "\r\n\r\n", 4);
 }
 
 int main(int argc, char *argv[]) {
