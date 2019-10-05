@@ -29,7 +29,7 @@ static int dropRoot(void) {
 	if (p == NULL) return 10;
 	const unsigned int uid = p->pw_uid;
 
-	struct group *g = getgrnam("nobody");
+	const struct group *g = getgrnam("nobody");
 	if (g == NULL) g = getgrnam("nogroup");
 	if (g == NULL) return 11;
 	const unsigned int gid = g->gr_gid;
@@ -54,7 +54,7 @@ static int dropRoot(void) {
 int main(int argc, char *argv[]) {
 	if (argc != 2) return 1;
 
-	const char *domain = argv[1];
+	const char * const domain = argv[1];
 	const size_t lenDomain = strlen(domain);
 
 	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) return 2; // Prevent writing to closed/invalid sockets from ending the process
