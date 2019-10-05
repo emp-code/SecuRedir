@@ -27,12 +27,12 @@ static int initSocket(const int * const sock) {
 static int dropRoot(void) {
 	const struct passwd * const p = getpwnam("nobody");
 	if (p == NULL) return 10;
-	const unsigned int uid = p->pw_uid;
+	const uid_t uid = p->pw_uid;
 
 	const struct group *g = getgrnam("nobody");
 	if (g == NULL) g = getgrnam("nogroup");
 	if (g == NULL) return 11;
-	const unsigned int gid = g->gr_gid;
+	const gid_t gid = g->gr_gid;
 
 	if (p->pw_gid != gid) return 12;
 
