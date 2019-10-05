@@ -9,6 +9,6 @@ Performs no reading, outputs nothing. Runs until killed.
 
 ---
 
-Compile: `gcc -Ofast -march=native -pipe -o SecuRedir main.c`
+Compile: `gcc -Ofast -march=native -pipe -o SecuRedir SecuRedir.c`
 
 Use: `./SecuRedir example.com`
