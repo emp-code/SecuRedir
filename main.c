@@ -33,23 +33,7 @@ static int dropRoot(void) {
 	return 0;
 }
 
-int main(int argc, char *argv[]) {
-	if (argc != 2) return 1;
-
-	const char * const domain = argv[1];
-	const size_t lenDomain = strlen(domain);
-
-	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) return 2; // Prevent writing to closed/invalid sockets from ending the process
-
-	const int sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (initSocket(&sock) != 0) return 3;
-
-	const int ret = dropRoot();
-	if (ret != 0) return ret;
-
-	const size_t lenResponse = 113 + lenDomain;
-	char response[lenResponse];
-
+void setResponse(char * const response, const char * const domain) {
 	memcpy(response,
 		"HTTP/1.1 301 r\r\n"
 		"Tk: N\r\n"
@@ -60,7 +44,23 @@ int main(int argc, char *argv[]) {
 	, 109);
 
 	memcpy(response + 109, domain, lenDomain);
-	memcpy(response + 109 + lenDomain, "\r\n\r\n", 4);
+	memcpy(response + 109 + strlen(domain), "\r\n\r\n", 4);
+}
+
+int main(int argc, char *argv[]) {
+	if (argc != 2) return 1;
+
+	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) return 2; // Prevent writing to closed/invalid sockets from ending the process
+
+	const int sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (initSocket(&sock) != 0) return 3;
+
+	const int ret = dropRoot();
+	if (ret != 0) return ret;
+
+	const size_t lenRespones = 113 + strlen(argv[1]);
+	char response[lenResponse];
+	setResponse(response, argv[1]);
 
 	while(1) {
 		const int sockNew = accept4(sock, NULL, NULL, SOCK_NONBLOCK);
