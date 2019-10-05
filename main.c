@@ -1,7 +1,6 @@
 #define _GNU_SOURCE // for accept4
 
 #include <arpa/inet.h>
-#include <grp.h>
 #include <pwd.h>
 #include <signal.h>
 #include <string.h>
@@ -27,26 +26,9 @@ static int initSocket(const int * const sock) {
 static int dropRoot(void) {
 	const struct passwd * const p = getpwnam("nobody");
 	if (p == NULL) return 10;
-	const uid_t uid = p->pw_uid;
 
-	const struct group *g = getgrnam("nobody");
-	if (g == NULL) g = getgrnam("nogroup");
-	if (g == NULL) return 11;
-	const gid_t gid = g->gr_gid;
-
-	if (p->pw_gid != gid) return 12;
-
-	if (
-	   strcmp(p->pw_shell, "/bin/nologin")      != 0
-	&& strcmp(p->pw_shell, "/usr/bin/nologin")  != 0
-	&& strcmp(p->pw_shell, "/usr/sbin/nologin") != 0
-	&& strcmp(p->pw_shell, "/sbin/nologin")     != 0
-	) return 13;
-
-	if (setgid(gid) != 0) return 14;
-	if (setuid(uid) != 0) return 15;
-
-	if (getuid() != uid || getgid() != gid) return 16;
+	if (setgid(p->pw_gid) != 0) return 11;
+	if (setuid(p->pw_uid) != 0) return 12;
 
 	return 0;
 }
