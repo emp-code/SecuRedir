@@ -25,10 +25,10 @@ static int initSocket(const int * const sock) {
 
 static int dropRoot(void) {
 	const struct passwd * const p = getpwnam("nobody");
-	if (p == NULL) return 10;
+	if (p == NULL) return -1;
 
-	if (setgid(p->pw_gid) != 0) return 11;
-	if (setuid(p->pw_uid) != 0) return 12;
+	if (setgid(p->pw_gid) != 0) return -1;
+	if (setuid(p->pw_uid) != 0) return -1;
 
 	return 0;
 }
@@ -55,8 +55,7 @@ int main(int argc, char *argv[]) {
 	const int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (initSocket(&sock) != 0) return 3;
 
-	const int ret = dropRoot();
-	if (ret != 0) return ret;
+	if (dropRoot() != 0) return 4;
 
 	const size_t lenRespones = 113 + strlen(argv[1]);
 	char response[lenResponse];
