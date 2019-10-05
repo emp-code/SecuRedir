@@ -65,25 +65,26 @@ int main(int argc, char *argv[]) {
 	const int ret = dropRoot();
 	if (ret != 0) return ret;
 
+	const size_t lenResponse = 113 + lenDomain;
+	char response[lenResponse];
+
+	memcpy(response,
+		"HTTP/1.1 301 r\r\n"
+		"Tk: N\r\n"
+		"Content-Length: 0\r\n"
+		"Connection: close\r\n"
+		"Referrer-Policy: no-referrer\r\n"
+		"Location: https://"
+	, 109);
+
+	memcpy(response + 109, domain, lenDomain);
+	memcpy(response + 109 + lenDomain, "\r\n\r\n", 4);
+
 	while(1) {
 		const int sockNew = accept4(sock, NULL, NULL, SOCK_NONBLOCK);
 
 		shutdown(sockNew, SHUT_RD);
-
-		char r[113 + lenDomain];
-		memcpy(r,
-			"HTTP/1.1 301 r\r\n"
-			"Tk: N\r\n"
-			"Content-Length: 0\r\n"
-			"Connection: close\r\n"
-			"Referrer-Policy: no-referrer\r\n"
-			"Location: https://"
-		, 109);
-
-		memcpy(r + 109, domain, lenDomain);
-		memcpy(r + 109 + lenDomain, "\r\n\r\n", 4);
-
-		write(sockNew, r, 113 + lenDomain);
+		write(sockNew, response, lenResponse);
 		close(sockNew);
 	}
 
