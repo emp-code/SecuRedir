@@ -36,15 +36,13 @@ static int dropRoot(void) {
 static void setResponse(char * const response, const char * const url) {
 	memcpy(response,
 		"HTTP/1.1 301 r\r\n"
-		"Tk: N\r\n"
 		"Content-Length: 0\r\n"
 		"Connection: close\r\n"
-		"Referrer-Policy: no-referrer\r\n"
 		"Location: https://"
-	, 109);
+	, 72);
 
-	memcpy(response + 109, url, strlen(url));
-	memcpy(response + 109 + strlen(url), "\r\n\r\n", 4);
+	memcpy(response + 72, url, strlen(url));
+	memcpy(response + 72 + strlen(url), "\r\n\r\n", 4);
 }
 
 int main(int argc, char *argv[]) {
@@ -57,7 +55,7 @@ int main(int argc, char *argv[]) {
 
 	if (dropRoot() != 0) return 4;
 
-	const size_t lenResponse = 113 + strlen(argv[1]);
+	const size_t lenResponse = 76 + strlen(argv[1]);
 	char response[lenResponse];
 	setResponse(response, argv[1]);
 
